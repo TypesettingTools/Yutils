@@ -3530,5 +3530,23 @@ if ({...})[1] then
 	_G.Yutils = Yutils
 end
 
+-- DependencyControl integration
+-- DependencyControl's module loader calls this hook when it loads the library. Constructing the
+-- record registers the module under its namespace and registers the bare "Yutils" alias, so scripts
+-- can keep requiring "Yutils" although the file installs to tstools/Yutils.lua. Loading the library
+-- without DependencyControl never calls this hook and leaves the library unchanged.
+function Yutils.__depCtrlInit(DependencyControl)
+	Yutils.version = DependencyControl({
+		name = "Yutils",
+		version = "1.0.0",
+		description = "An ASS typeset utilities library.",
+		author = "Christoph \"Youka\" Spanknebel",
+		moduleName = "tstools.Yutils",
+		url = "https://github.com/TypesettingTools/Yutils",
+		feed = "https://raw.githubusercontent.com/TypesettingTools/Yutils/master/DependencyControl.json",
+		provides = {"Yutils"}
+	})
+end
+
 -- Return library to script loader
 return Yutils
